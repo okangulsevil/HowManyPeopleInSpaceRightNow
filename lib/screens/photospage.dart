@@ -20,8 +20,6 @@ class _PhotosPageState extends State<PhotosPage> {
 
   @override
   Widget build(BuildContext context) {
-    var titleStyles = const TextStyle(fontSize: 25, color: Colors.white);
-    var subtitle = const TextStyle(fontSize: 15, color: Colors.white);
     return Container(
       color: Colors.black,
       alignment: Alignment.center,
@@ -36,15 +34,24 @@ class _PhotosPageState extends State<PhotosPage> {
                 children: [
                   Text(
                     snapshot.data![0].title.toString(),
-                    style: titleStyles,
+                    style: const TextStyle(fontSize: 25, color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
-                  Text('\n Date:' + snapshot.data![0].date.toString(),
-                      style: subtitle),
+                  Text(
+                      '\n Date: ' +
+                          snapshot.data![0].date.day.toString() +
+                          "/" +
+                          snapshot.data![0].date.month.toString() +
+                          "/" +
+                          snapshot.data![0].date.year.toString(),
+                      style:
+                          const TextStyle(fontSize: 15, color: Colors.white)),
+                  const Divider(),
                   Image.network(snapshot.data![0].url),
+                  const Divider(),
                   Text(
                     snapshot.data![0].explanation.toString(),
-                    style: subtitle,
+                    style: const TextStyle(fontSize: 15, color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
                 ],

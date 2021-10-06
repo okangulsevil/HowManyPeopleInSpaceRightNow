@@ -25,7 +25,7 @@ class _AstroPageState extends State<AstroPage> {
               return Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(100),
+                    padding: const EdgeInsets.all(40),
                     child: Text(snapshot.data!.number.toString(),
                         style: const TextStyle(
                             fontSize: 100, color: Colors.white)),
@@ -37,12 +37,12 @@ class _AstroPageState extends State<AstroPage> {
                         return ListTile(
                           title: Text(snapshot.data!.people[position].name,
                               style: const TextStyle(
-                                  fontSize: 20, color: Colors.white),
+                                  fontSize: 25, color: Colors.white),
                               textAlign: TextAlign.center),
                           subtitle: Text(
-                            snapshot.data!.people[position].craft,
+                            "( ${snapshot.data!.people[position].craft} )",
                             style: const TextStyle(
-                                fontSize: 20, color: Colors.white),
+                                fontSize: 17, color: Colors.white),
                             textAlign: TextAlign.center,
                           ),
                         );
