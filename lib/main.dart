@@ -1,9 +1,6 @@
-import 'dart:convert';
-
-import 'package:astronotapp/models/astronot.dart';
+import 'package:astronotapp/screens/peoplepage.dart';
+import 'package:astronotapp/screens/photospage.dart';
 import 'package:flutter/material.dart';
-
-import 'package:http/http.dart' as http;
 
 void main() => runApp(const MyApp());
 
@@ -34,104 +31,36 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
-  @override
-  void initState() {
-    super.initState();
-  }
-
+  String pageTitle = '#HowManyPeopleAreInSpaceRightNow?';
   static const List<Widget> _widgetOptions = <Widget>[
-    // MainPage(),
-    // NewsPage(),
-    // PhotosPage(),
+    AstroPage(),
+    PhotosPage(),
   ];
 
   void _onItemTapped(int index) {
-    // setState(() {
-    //   _selectedIndex = index;
-    //   if (_selectedIndex == 0) {
-    //     pageTitle = '#HowManyPeopleInSpaceRightNow?';
-    //   } else if (_selectedIndex == 1) {
-    //     pageTitle = '#NewsFromSpace';
-    //   } else if (_selectedIndex == 2) {
-    //     pageTitle = '#PhotosFromSpace';
-    //   }
-    // });
-  }
-
-  //APİ BURDA ÇAĞRILIYOR
-  Future<Astro> getAstroApi() async {
-    final response =
-        await http.get(Uri.parse("http://api.open-notify.org/astros.json"));
-
-    if (response.statusCode == 200) {
-      return Astro.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception("Failed to load Astronots.");
-    }
+    setState(() {
+      _selectedIndex = index;
+      if (_selectedIndex == 0) {
+        pageTitle = '#HowManyPeopleAreInSpaceRightNow?';
+      } else if (_selectedIndex == 1) {
+        pageTitle = '#PhotosFromSpace';
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "#HowManyPeopleInSpaceRightNow?",
-          style: TextStyle(color: Colors.white),
+        centerTitle: true,
+        title: Text(
+          pageTitle,
+          style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.black,
         elevation: 0,
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("images/earth.jpeg"), fit: BoxFit.cover)),
-        child: FutureBuilder<Astro>(
-          future: getAstroApi(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasData) {
-                return Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(100),
-                      child: Text(snapshot.data!.number.toString(),
-                          style: const TextStyle(
-                              fontSize: 100, color: Colors.white)),
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: snapshot.data!.people.length,
-                        itemBuilder: (context, position) {
-                          return ListTile(
-                            title: Text(snapshot.data!.people[position].name,
-                                style: const TextStyle(
-                                    fontSize: 20, color: Colors.white),
-                                textAlign: TextAlign.center),
-                            subtitle: Text(
-                              snapshot.data!.people[position].craft,
-                              style: const TextStyle(
-                                  fontSize: 20, color: Colors.white),
-                              textAlign: TextAlign.center,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                );
-              } else {
-                return const Text("You have error.");
-              }
-            } else if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              return const Text("You have error. Are you APİ?");
-            }
-          },
-        ),
-      ),
+      body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color(0xFF000000),
         selectedItemColor: const Color(0xFFFFFFFF),
@@ -144,17 +73,12 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'How Many People Are in Space Right now?',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.label_important),
-            label: 'News',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.image),
             label: 'Photos',
           ),
         ],
-        //currentIndex: _selectedIndex,
-
-        //onTap: _onItemTapped,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }
